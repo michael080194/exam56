@@ -17,9 +17,14 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 
-                @section('my_menu') @can('後台管理')
-                <li><a class="nav-link" href="/admin">{{ __('Admin') }}</a></li>
-                @endcan @show
+                @section('my_menu')
+                  @can('後台管理')
+                    <li><a class="nav-link" href="/admin">{{ __('Admin') }}</a></li>
+                  @endcan
+                  @can('建立測驗')
+                    <li><a class="nav-link" href="/exam/creat">{{ __('ExamCreat') }}</a></li>
+                  @endcan
+                @show
 
                 @guest
                     <li class="nav-item">

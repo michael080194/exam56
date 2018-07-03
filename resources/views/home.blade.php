@@ -21,3 +21,7 @@
     </div>
 </div>
 @endsection
+
+@section('my_menu') 
+  @parent
+@stop
