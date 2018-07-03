@@ -12,7 +12,7 @@
  */
 
 Route::get('/', function () {
-    $data = ['name' => 'Michael', 'say' => '嗨！'];
+    $data = ['name' => 'Michael', 'say' => '嗨！!'];
 
     return view('welcome', $data);
 });
