@@ -11,15 +11,15 @@
 |
  */
 
-Route::get('/', function () {
-    $data = ['name' => 'Michael', 'say' => '嗨！!'];
-
-    return view('welcome', $data);
-});
-
+/*  專案進入點 web.php 的路徑 EXAM56/routes/ */
+/*  控制器(controller)的路徑 EXAM56/app/Http/Controlls */
+/*  視圖(view)的路徑   EXAM56/resources/views */
 Auth::routes();
+Route::get('/', 'ExamController@index')->name('index');
+Route::get('/home', 'ExamController@index')->name('home.index');
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Auth::routes();
 
 Route::get('/exam', 'ExamController@index')->name('exam.index');
 Route::get('/exam/create', 'ExamController@create')->name('exam.create');
+Route::post('/exam', 'ExamController@store')->name('exam.store');
