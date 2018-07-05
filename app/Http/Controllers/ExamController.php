@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exam;
 use App\Http\Requests\ExamRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExamController extends Controller
 {
@@ -15,9 +16,16 @@ class ExamController extends Controller
      */
     public function index()
     {
-        $exams = Exam::where('enable', 1)
-            ->orderBy('created_at', 'desc')
-            ->paginate(3);
+        $user = Auth::user();
+        if ($user and $user->can('建立測驗')) {
+            $exams = Exam::orderBy('created_at', 'desc')
+                ->paginate(3);
+        } else {
+            $exams = Exam::where('enable', 1)
+                ->orderBy('created_at', 'desc')
+                ->paginate(2);
+        }
+
         return view('exam.index', compact('exams'));
     }
 
@@ -49,9 +57,16 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Exam $exam)
     {
-        //
+        // $topics = Topic::all();
+        // $topics = Topic::where('exam_id', $exam->id)->get();
+        $user = Auth::user();
+        if ($user and $user->can('進行測驗')) {
+            $exam->topics = $exam->topics->random(10);
+        }
+        return view('exam.show', compact('exam'));
+        // return view('exam.show', ['exam' => $exam]);
     }
 
     /**
@@ -60,11 +75,10 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Exam $exam)
     {
-        //
+        return view('exam.create', compact('exam'));
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -72,19 +86,20 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ExamRequest $request, Exam $exam)
     {
-        //
+        $exam->update($request->all());
+        return redirect()->route('exam.show', $exam->id);
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Exam $exam)
     {
-        //
+        $exam->delete();
+
     }
 }
